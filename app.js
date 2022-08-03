@@ -18,8 +18,11 @@ const passport = require('passport');
 //passport-github2モジュールからStrategyオブジェクトを取得
 const GitHubStrategy = require('passport-github2').Strategy;
 
-const GITHUB_CLIENT_ID = 'ab225d26a9a6ca8f0e4d';  /* ClientIDを記入*/
-const GITHUB_CLIENT_SECRET = 'a7b54f776b732092f7692eacb3c105f85eef8077';  /* ClientSecretを記入 */
+//IDや鍵は.gitignoreの対象となっている別ファイルから読み込むようにする（セキュリテイ向上のため）
+const env = require('./env');
+
+const GITHUB_CLIENT_ID = env.GITHUB_CLIENT_ID;  /* ClientIDを設定*/
+const GITHUB_CLIENT_SECRET = env.GITHUB_CLIENT_SECRET;  /* ClientSecretを設定 */
 
 //ユーザの情報をデータとして保存する処理
 /* こkではユーザ情報の全てをそのままオブジェクトとしてセッションに保存 */
@@ -73,7 +76,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({ 
-    secret: 'a05fc7e4ece37c64', // node -e "console.log(require('crypto').randomBytes(8).toString('hex'));" で作成したランダムな文字列(セッションID作成のための秘密鍵)
+    secret: env.SESSION_SECRET_KEY,  //セッションIDを作成するための秘密鍵を設定
     resave: false,  //セッションはストアには保存しない
     saveUninitialized: false  //セッションが初期化されていなくても初期化しない
   })
